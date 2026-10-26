@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - ERP</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'inicio/style.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+     <div class="wrapper" style="width: 950px; max-width: 95%; padding: 35px; border-radius: 15px;">
+         
+         <!-- Barra de navegación superior -->
+         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+             <h2 class="m-0 text-dark"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+             <div>
+                 <span class="me-3 text-dark">Bienvenido, <strong>{{user.first_name|default:user.username}}</strong></span>
+                 <a href="{% url 'inicio:logout' %}" class="btn btn-outline-danger btn-sm">Cerrar sesión</a>
+             </div>
+         </div>
+
+         <!-- Información de roles -->
+         <div class="mb-4">
+             <p class="text-dark">Roles asignados: <strong class="text-primary">{{roles|join:", "}}</strong></p>
+         </div>
+
+         <!-- Módulos / Permisos del ERP -->
+         <div class="row g-3">
+            
+            <!-- Módulo Clientes -->
+            {% if permissions.customers > 0 %}
+            <div class="col-md-4">
+              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
+                <h5 class="text-dark"><i class="bi bi-people"></i> Clientes</h5>
+                <p class="text-muted small mb-3">
+                    {% if permissions.customers == 1 %}View only{% else %}Read and Write{% endif %}
+                </p>
+                <a href="#" class="btn btn-sm btn-primary w-100">Access</a>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Módulo Inventario / Ficha de Productos (HU-01) -->
+            {% if permissions.inventory > 0 %}
+            <div class="col-md-4">
+              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
+                <h5 class="text-dark"><i class="bi bi-box-seam"></i> Inventario / Productos</h5>
+                <p class="text-muted small mb-3">
+                    {% if permissions.inventory == 1 %}View only{% else %}Read and Write{% endif %}
+                </p>
+                <a href="{% url 'inventario:product_list' %}" class="btn btn-sm btn-primary w-100">Access</a>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Módulo Proveedores -->
+            {% if permissions.suppliers > 0 %}
+            <div class="col-md-4">
+              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
+                <h5 class="text-dark"><i class="bi bi-truck"></i> Proveedores</h5>
+                <p class="text-muted small mb-3">
+                    {% if permissions.suppliers == 1 %}View only{% else %}Read and Write{% endif %}
+                </p>
+                <a href="#" class="btn btn-sm btn-primary w-100">Access</a>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Módulo Compras -->
+            {% if permissions.purchases > 0 %}
+            <div class="col-md-4">
+              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
+                <h5 class="text-dark"><i class="bi bi-cart"></i> Compras</h5>
+                <p class="text-muted small mb-3">
+                    {% if permissions.purchases == 1 %}View only{% else %}Read and Write{% endif %}
+                </p>
+                <a href="#" class="btn btn-sm btn-primary w-100">Access</a>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Módulo Ventas -->
+            {% if permissions.sales > 0 %}
+            <div class="col-md-4">
+              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
+                <h5 class="text-dark"><i class="bi bi-cash-coin"></i> Ventas</h5>
+                <p class="text-muted small mb-3">
+                    {% if permissions.sales == 1 %}View only{% else %}Read and Write{% endif %}
+                </p>
+                <a href="#" class="btn btn-sm btn-primary w-100">Access</a>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Módulo Contabilidad -->
+            {% if permissions.accounting > 0 %}
+            <div class="col-md-4">
+              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
+                <h5 class="text-dark"><i class="bi bi-calculator"></i> Contabilidad</h5>
+                <p class="text-muted small mb-3">
+                    {% if permissions.accounting == 1 %}View only{% else %}Read and Write{% endif %}
+                </p>
+                <a href="#" class="btn btn-sm btn-primary w-100">Access</a>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Módulo Reportes -->
+            {% if permissions.reporting > 0 %}
+            <div class="col-md-4">
+              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
+                <h5 class="text-dark"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</h5>
+                <p class="text-muted small mb-3">
+                    {% if permissions.reporting == 1 %}View only{% else %}Read and Write{% endif %}
+                </p>
+                <a href="#" class="btn btn-sm btn-primary w-100">Access</a>
+              </div>
+            </div>
+            {% endif %}
+
+         </div>
+     </div> 
+</body>
+</html>
