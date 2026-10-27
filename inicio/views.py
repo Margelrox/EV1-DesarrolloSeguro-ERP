@@ -16,6 +16,10 @@ FUNCIONES = [
     'Ficha del cliente',
     'Consultas e informes',
 ]
+def inicio(request):
+    return redirect('inicio:dashboard' if request.user.is_authenticated else 'inicio:login')
+
+
 #Se añade login view para seguir protocolos de desarrollo de django - Juan
 def login_view(request):
     if request.user.is_authenticated:
@@ -29,6 +33,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None: 
                 login(request, user)
+                request.session.set_expiry(None if request.POST.get('remember_me') == 'on' else 0)
                 return redirect('inicio:dashboard')
             else: 
                 messages.error(request, 'Usuario o contraseña inválido')

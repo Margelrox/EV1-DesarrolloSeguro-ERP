@@ -1,25 +1,29 @@
 {% extends 'inventario/base.html' %}
 {% block content %}
-<h1>Productos</h1>
+<h1 class="page-heading">Productos</h1>
 <p>Roles: {{ access.roles|join:", " }}.</p>
 {% if access.edit_products %}
   <a class="btn btn-primary mb-3" href="{% url 'inventario:product_create' %}">Crear producto</a>
 {% endif %}
 <div class="table-responsive">
-  <table class="table table-light">
-    <thead><tr><th>Código</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+  <table class="table table-light product-table mb-0">
+    <caption class="visually-hidden">Productos registrados en inventario</caption>
+    <thead><tr><th scope="col">Código</th><th scope="col">Nombre</th><th scope="col">Precio</th><th scope="col">Stock</th><th scope="col">Acciones</th></tr></thead>
     <tbody>
     {% for product in products %}
       <tr>
         <td>{{ product.codigo }}</td><td>{{ product.nombre }}</td>
         <td>{{ product.precio }}</td><td>{{ product.stock }}</td>
         <td>
+          <div class="product-actions">
           {% if access.edit_products %}
           <a href="{% url 'inventario:product_edit' product.pk %}">Editar ficha</a>
           {% endif %}
           {% if access.change_prices %}
-          <a class="ms-2" href="{% url 'inventario:product_price' product.pk %}">Cambiar precio</a>
+          <a href="{% url 'inventario:product_price' product.pk %}">Cambiar precio</a>
           {% endif %}
+          {% if not access.edit_products and not access.change_prices %}<span class="text-muted">Solo lectura</span>{% endif %}
+          </div>
         </td>
       </tr>
     {% empty %}

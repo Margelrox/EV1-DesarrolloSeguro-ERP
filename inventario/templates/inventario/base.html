@@ -9,11 +9,12 @@
   <link rel="stylesheet" href="{% static 'inicio/style.css' %}">
 </head>
 <body>
-  <main class="wrapper" style="width: 1050px; max-width: 95%; padding: 30px;">
-    <nav class="d-flex justify-content-between mb-3">
+  <main class="wrapper wrapper-inventory">
+    <nav class="d-flex flex-wrap gap-2 justify-content-between mb-4" aria-label="Navegación de inventario">
       <a href="{% url 'inicio:dashboard' %}">Volver al dashboard</a>
       <span>Usuario: <strong>{{ request.user.username }}</strong></span>
     </nav>
+    {% include 'inicio/messages.html' %}
     {% block content %}{% endblock %}
   </main>
 </body>

@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET, require_http_methods
 
@@ -24,9 +25,11 @@ def product_create(request):
     form = ProductCreateForm(request.POST if request.method == 'POST' else None)
     if request.method == 'POST' and form.is_valid():
         form.save()
+        messages.success(request, 'Producto creado correctamente.')
         return redirect('inventario:product_list')
     return render(request, 'inventario/product_form.html', {
         'form': form, 'title': 'Crear producto',
+        'help_text': 'El precio y el stock iniciales son 0. Un administrador puede configurar el precio por separado.',
     })
 
 
@@ -39,9 +42,11 @@ def product_edit(request, pk):
     form = ProductEditForm(request.POST if request.method == 'POST' else None, instance=product)
     if request.method == 'POST' and form.is_valid():
         form.save()
+        messages.success(request, 'Ficha actualizada correctamente.')
         return redirect('inventario:product_list')
     return render(request, 'inventario/product_form.html', {
         'form': form, 'title': f'Editar producto {product.codigo}',
+        'help_text': 'Aquí puedes editar el nombre y la descripción. El código, el precio y el stock se conservan.',
     })
 
 
@@ -52,7 +57,9 @@ def product_price(request, pk):
     form = ProductPriceForm(request.POST if request.method == 'POST' else None, instance=product)
     if request.method == 'POST' and form.is_valid():
         form.save()
+        messages.success(request, 'Precio actualizado correctamente.')
         return redirect('inventario:product_list')
     return render(request, 'inventario/product_form.html', {
         'form': form, 'title': f'Cambiar precio de {product.codigo}',
+        'help_text': 'Ingresa un precio igual o mayor que 0. Esta operación solo modifica el precio.',
     })
