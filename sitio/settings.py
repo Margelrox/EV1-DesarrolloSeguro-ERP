@@ -38,7 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inicio',
+    'users',
+    'inventario',
 ]
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_URL = '/inicio/login'
+LOGIN_REDIRECT_URL = '/inicio/dashboard'
+LOGOUT_REDIRECT_URL = '/inicio/login'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

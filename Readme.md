@@ -1,6 +1,4 @@
 Repositorio Evaluación 1
 
 
-Edición de prueba
-Repo Devssss
-xd
+26/10/26 Se añadio login, dashboard, app inventario y users, se utilizaron los paquetes de django para seguridad. 
