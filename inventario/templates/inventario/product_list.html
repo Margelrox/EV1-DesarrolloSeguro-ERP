@@ -1,0 +1,31 @@
+{% extends 'inventario/base.html' %}
+{% block content %}
+<h1>Productos</h1>
+<p>Roles: {{ access.roles|join:", " }}.</p>
+{% if access.edit_products %}
+  <a class="btn btn-primary mb-3" href="{% url 'inventario:product_create' %}">Crear producto</a>
+{% endif %}
+<div class="table-responsive">
+  <table class="table table-light">
+    <thead><tr><th>Código</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+    <tbody>
+    {% for product in products %}
+      <tr>
+        <td>{{ product.codigo }}</td><td>{{ product.nombre }}</td>
+        <td>{{ product.precio }}</td><td>{{ product.stock }}</td>
+        <td>
+          {% if access.edit_products %}
+          <a href="{% url 'inventario:product_edit' product.pk %}">Editar ficha</a>
+          {% endif %}
+          {% if access.change_prices %}
+          <a class="ms-2" href="{% url 'inventario:product_price' product.pk %}">Cambiar precio</a>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="5">No hay productos registrados.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

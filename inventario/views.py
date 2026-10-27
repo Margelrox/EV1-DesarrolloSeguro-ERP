@@ -1,28 +1,58 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from users.models import UserRole
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_GET, require_http_methods
+
+from users.permissions import get_user_access, inventory_permission_required
+from .forms import ProductCreateForm, ProductEditForm, ProductPriceForm
 from .models import Product
 
-@login_required
+
+@inventory_permission_required('view_products')
+@require_GET
 def product_list(request):
-    # Obtenemos los roles del usuario logueado
-    user_roles = UserRole.objects.filter(user_id=request.user)
-    
-    # Determinamos el nivel máximo de permiso para 'inventory'
-    max_permission = 0
-    for ur in user_roles:
-        perm = ur.role.inventory # Campo inventory de tu modelo Role
-        if perm > max_permission:
-            max_permission = perm
+    return render(request, 'inventario/product_list.html', {
+        'products': Product.objects.order_by('codigo'),
+        'access': get_user_access(request.user),
+    })
 
-    # Si no tiene ningún acceso (0), lo devolvemos al dashboard
-    if max_permission == 0:
-        return redirect('inicio:dashboard')
 
-    products = Product.objects.all()
-    
-    context = {
-        'products': products,
-        'permission_level': max_permission, # 1 = View only, 2 = Create/Modify
-    }
-    return render(request, 'inventario/product_list.html', context)
+@inventory_permission_required('edit_products')
+@require_http_methods(['GET', 'POST'])
+def product_create(request):
+    if request.method == 'POST' and 'precio' in request.POST:
+        raise PermissionDenied('El precio se cambia en la operación de precios.')
+    form = ProductCreateForm(request.POST if request.method == 'POST' else None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('inventario:product_list')
+    return render(request, 'inventario/product_form.html', {
+        'form': form, 'title': 'Crear producto',
+    })
+
+
+@inventory_permission_required('edit_products')
+@require_http_methods(['GET', 'POST'])
+def product_edit(request, pk):
+    if request.method == 'POST' and 'precio' in request.POST:
+        raise PermissionDenied('El precio se cambia en la operación de precios.')
+    product = get_object_or_404(Product, pk=pk)
+    form = ProductEditForm(request.POST if request.method == 'POST' else None, instance=product)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('inventario:product_list')
+    return render(request, 'inventario/product_form.html', {
+        'form': form, 'title': f'Editar producto {product.codigo}',
+    })
+
+
+@inventory_permission_required('change_prices')
+@require_http_methods(['GET', 'POST'])
+def product_price(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    form = ProductPriceForm(request.POST if request.method == 'POST' else None, instance=product)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('inventario:product_list')
+    return render(request, 'inventario/product_form.html', {
+        'form': form, 'title': f'Cambiar precio de {product.codigo}',
+    })

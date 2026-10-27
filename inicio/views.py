@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import LoginForm
-from users.models import UserRole, Role
+from users.permissions import get_user_access
 
 FUNCIONES = [
     'Ficha completa de productos (código, grupos, código de barras, ficha técnica, impuestos)',
@@ -62,28 +62,12 @@ def logout_view(request):
 #Se requiere login para entrar a dashboard
 @login_required
 def dashboard(request):
-    user_roles = UserRole.objects.filter(user_id= request.user)
-
-    permissions = {
-        'customers' : 0,
-        'suppliers' : 0,
-        'materials' : 0,
-        'purchases' : 0,
-        'sales' : 0,
-        'inventory' : 0,
-        'accounting' : 0,
-        'reporting' : 0,
-    }
-    for user_role in user_roles:
-        role = user_role.role
-        for module in permissions.keys():
-            current_permission = getattr(role,module)
-            if current_permission > permissions[module]:
-                permissions[module]= current_permission
+    access = get_user_access(request.user)
     context = {
         'user': request.user,
-        'permissions': permissions,
-        'roles' : [ur.role.role_name for ur in user_roles],
+        'permissions': access['modules'],
+        'roles': access['roles'],
+        'access': access,
     } 
     return render (request, 'inicio/dashboard.html', context)
 

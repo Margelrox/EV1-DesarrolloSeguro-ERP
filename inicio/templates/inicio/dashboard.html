@@ -23,7 +23,10 @@
 
          <!-- Información de roles -->
          <div class="mb-4">
-             <p class="text-dark">Roles asignados: <strong class="text-primary">{{roles|join:", "}}</strong></p>
+             <p class="text-dark">Roles asignados: <strong class="text-primary">{{roles|join:", "|default:"Sin rol"}}</strong></p>
+             {% if access.manage_roles and user.is_staff %}
+             <a href="{% url 'admin:users_userrole_changelist' %}" class="btn btn-sm btn-secondary">Asignar roles</a>
+             {% endif %}
          </div>
 
          <!-- Módulos / Permisos del ERP -->
