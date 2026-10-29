@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Inventario{% endblock %} - ERP</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'inicio/style.css' %}">
+</head>
+<body>
+  <main class="wrapper wrapper-inventory">
+    <nav class="d-flex flex-wrap gap-2 justify-content-between mb-4" aria-label="Navegación de inventario">
+      <a href="{% url 'inicio:dashboard' %}">Volver al dashboard</a>
+      <span>Usuario: <strong>{{ request.user.username }}</strong></span>
+    </nav>
+    {% include 'inicio/messages.html' %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

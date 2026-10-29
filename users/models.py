@@ -30,14 +30,16 @@ class Role (models.Model):
     inventory = models.IntegerField(choices= PERMISSION_CHOICES, default= 0)
     accounting = models.IntegerField(choices= PERMISSION_CHOICES, default= 0)
     reporting = models.IntegerField(choices= PERMISSION_CHOICES, default= 0)
+    can_change_prices = models.BooleanField(default=False, verbose_name='Puede cambiar precios')
+    can_manage_roles = models.BooleanField(default=False, verbose_name='Puede asignar roles')
 
     class Meta:
         db_table = 'roles'
         verbose_name = 'Role'
         verbose_name_plural = 'Roles'
 
-    def __str___(self):
-         return self.role.name
+    def __str__(self):
+        return self.role_name
 class UserRole(models.Model):
     user_id= models.ForeignKey(User, on_delete=models.CASCADE)
     role= models.ForeignKey(Role, on_delete=models.CASCADE)
@@ -49,6 +51,4 @@ class UserRole(models.Model):
         unique_together = ('user_id', 'role') #Evita que asigne el mismo rol dos veces a un usuario
 
     def __str__(self):
-        return f"{self.user_id.username} - {self.role.role_name}"  
-
- 
+        return f"{self.user_id.username} - {self.role.role_name}"

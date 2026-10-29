@@ -1,0 +1,14 @@
+{% extends 'inventario/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1 class="page-heading">{{ title }}</h1>
+<p class="form-note">{{ help_text }}</p>
+<form method="post" class="product-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <div class="d-flex flex-wrap gap-2 mt-4">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a class="btn btn-secondary" href="{% url 'inventario:product_list' %}">Cancelar</a>
+  </div>
+</form>
+{% endblock %}
