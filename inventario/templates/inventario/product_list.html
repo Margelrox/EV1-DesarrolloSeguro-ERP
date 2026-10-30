@@ -2,6 +2,7 @@
 {% block content %}
 <h1 class="page-heading">Productos</h1>
 <p>Roles: {{ access.roles|join:", " }}.</p>
+{% if access.manage_warehouses %}<p><a href="{% url 'inventario:audit_list' %}">Consultar auditoría</a></p>{% endif %}
 {% if access.edit_products %}
   <a class="btn btn-primary mb-3" href="{% url 'inventario:product_create' %}">Crear producto</a>
 {% endif %}
@@ -12,7 +13,7 @@
     <tbody>
     {% for product in products %}
       <tr>
-        <td>{{ product.codigo }}</td><td>{{ product.nombre }}</td>
+        <td><a href="{% url 'inventario:product_detail' product.pk %}">{{ product.codigo }}</a></td><td>{{ product.nombre }}</td>
         <td>{{ product.precio }}</td><td>{{ product.stock }}</td>
         <td>
           <div class="product-actions">

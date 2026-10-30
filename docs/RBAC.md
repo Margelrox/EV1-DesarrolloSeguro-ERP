@@ -21,15 +21,19 @@ no con un nombre enviado en el formulario ni con el nombre de usuario.
 |---|---|---|---|---|---|
 | Consultar productos, precio y stock | Sí | Sí | Sí | Sí | No |
 | Crear ficha de producto | Sí | Sí | No | No | No |
-| Editar nombre y descripción | Sí | Sí | No | No | No |
+| Editar ficha general | Sí | Sí | No | No | No |
+| Consultar bodegas activas, existencias y movimientos | Sí | Sí | Sí | Sí | No |
+| Crear, editar y desactivar bodegas; consultar auditoría | Sí | No | No | No | No |
+| Registrar entradas y salidas | Sí | Sí | Sí | No | No |
 | Cambiar precios | Sí | No | No | No | No |
 | Asignar/retirar roles desde Django Admin | Sí, con is_staff | No | No | No | No |
 | Editar usuarios, definir permisos de Role o editar Group | Solo superusuario de preparación | No | No | No | No |
 
 El producto se crea con precio 0 y stock 0. El administrador configura el precio
 en una operación separada; la ficha general nunca modifica precio ni stock.
-El código solo se define al crear. No se implementa eliminación de productos,
-bodegas, movimientos ni ajustes de stock en esta rama.
+El código solo se define al crear. La ampliación DSE-35/36/37 añade bodegas y
+movimientos; consulta [INVENTARIO.md](INVENTARIO.md). No hay eliminación de
+productos ni edición directa del stock.
 
 ## Descargar y ejecutar
 
@@ -156,12 +160,9 @@ deniega el acceso; los campos admitidos se definen explícitamente en formulario
 El control aborda la amenaza A2, elevación de privilegios, y se verifica mediante
 pruebas permitidas y rechazadas con comprobación del estado de la base de datos.
 
-Pendiente: aceptación de la matriz por el equipo, pruebas/capturas locales,
-integración de permisos en bodegas/movimientos cuando existan, y auditoría
-inmutable exigida por la historia original. Django Admin tiene su registro
-normal de cambios, que no se presenta como auditoría inmutable. No se ha fijado
-ni ejecutado una línea base SonarQube en este trabajo.
-
-La rama se mantiene sin Pull Request por solicitud de Luis. La revisión,
-aprobaciones y merge quedan pendientes; los tickets no deben cerrarse como si
-esa integración ya estuviera completada.
+La base RBAC se integró en main mediante el PR #6. La ampliación DSE-35/36/37
+añade permisos de bodegas/movimientos y auditoría protegida mediante triggers
+en SQLite. Los permisos nuevos y sus límites están en INVENTARIO.md.
+Pendiente: revisión del equipo, capturas locales, despliegue con HTTPS y cifrado,
+y línea base SonarQube. La ampliación se entrega sin commit ni PR; no cerrar sus
+tickets antes de revisar e integrar los cambios.

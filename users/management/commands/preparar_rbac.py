@@ -9,9 +9,10 @@ from users.models import Role, User, UserRole
 
 
 ROLE_DEFAULTS = {
-    'Administrador': {'inventory': 2, 'can_change_prices': True, 'can_manage_roles': True},
-    'Jefe de bodega': {'inventory': 2},
-    'Operador de bodega': {'inventory': 1},
+    'Administrador': {'inventory': 2, 'can_change_prices': True, 'can_manage_roles': True,
+                      'can_manage_warehouses': True, 'can_register_movements': True},
+    'Jefe de bodega': {'inventory': 2, 'can_register_movements': True},
+    'Operador de bodega': {'inventory': 1, 'can_register_movements': True},
     'Vendedor': {'inventory': 1},
 }
 DEMO_USERS = {

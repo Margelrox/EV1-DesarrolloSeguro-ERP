@@ -1,133 +1,75 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel principal - ERP</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{% static 'inicio/style.css' %}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
-<body>
-     <div class="wrapper wrapper-dashboard">
-         
-         <!-- Barra de navegación superior -->
-         <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
-             <h2 class="m-0 text-dark"><i class="bi bi-speedometer2"></i> Panel principal</h2>
-             <div class="d-flex flex-wrap align-items-center gap-2">
-                 <span class="text-dark">Bienvenido, <strong>{{user.first_name|default:user.username}}</strong></span>
-                 <a href="{% url 'inicio:logout' %}" class="btn btn-outline-danger btn-sm">Cerrar sesión</a>
-             </div>
-         </div>
+{% extends 'inicio/app_base.html' %}
+{% block title %}Panel principal{% endblock %}
+{% block app_content %}
+<h1 class="h3 mb-2">Panel principal</h1>
+<p class="mb-1">Bienvenido, <strong>{{ user.first_name|default:user.username }}</strong>.</p>
+<p class="small mb-4">Roles asignados: {{ roles|join:", "|default:"Sin rol" }}</p>
 
-         <!-- Información de roles -->
-         <div class="mb-4">
-             <p class="text-dark">Roles asignados: <strong class="text-primary">{{roles|join:", "|default:"Sin rol"}}</strong></p>
-             {% if access.manage_roles and user.is_staff %}
-             <a href="{% url 'admin:users_userrole_changelist' %}" class="btn btn-sm btn-secondary">Asignar roles</a>
-             {% endif %}
-         </div>
+{% if access.view_products %}
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="panel-card h-100">
+      <h2 class="h5"><i class="bi bi-box-seam" aria-hidden="true"></i> Productos</h2>
+      <p>Consulta las fichas y el stock de los productos.</p>
+      <a class="btn btn-primary btn-sm" href="{% url 'inventario:product_list' %}">Ver productos</a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="panel-card h-100">
+      <h2 class="h5"><i class="bi bi-building" aria-hidden="true"></i> Bodegas</h2>
+      <p>Consulta las bodegas disponibles del inventario.</p>
+      <a class="btn btn-primary btn-sm" href="{% url 'inventario:warehouse_list' %}">Ver bodegas</a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="panel-card h-100">
+      <h2 class="h5"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Movimientos</h2>
+      <p>Revisa las entradas y salidas por bodega.</p>
+      <a class="btn btn-primary btn-sm" href="{% url 'inventario:movement_list' %}">Ver movimientos</a>
+    </div>
+  </div>
+</div>
 
-         {% if not permissions.inventory %}
-         <p class="access-note">Tu cuenta no tiene acceso a Inventario. Solicita al administrador que revise tus roles.</p>
-         {% endif %}
+<section class="panel-card mb-4" aria-labelledby="summary-heading">
+  <h2 class="h5 mb-3" id="summary-heading">Resumen del inventario</h2>
+  <div class="row g-3 text-center">
+    <div class="col-6 col-lg-3"><strong class="h4 d-block">{{ summary.products }}</strong><span class="small">Productos</span></div>
+    <div class="col-6 col-lg-3"><strong class="h4 d-block">{{ summary.warehouses }}</strong><span class="small">Bodegas activas</span></div>
+    <div class="col-6 col-lg-3"><strong class="h4 d-block">{{ summary.units }}</strong><span class="small">Unidades en stock</span></div>
+    <div class="col-6 col-lg-3"><strong class="h4 d-block">{{ summary.low_stock }}</strong><span class="small">Bajo nivel óptimo</span></div>
+  </div>
+</section>
 
-         <!-- Módulos / Permisos del ERP -->
-         <div class="row g-3">
-            
-            <!-- Módulo Clientes -->
-            {% if permissions.customers > 0 %}
-            <div class="col-md-4">
-              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
-                <h5 class="text-dark"><i class="bi bi-people"></i> Clientes</h5>
-                <p class="text-muted small mb-3">
-                    {% if permissions.customers == 1 %}Solo lectura{% else %}Lectura y escritura{% endif %}
-                </p>
-                <button type="button" class="btn btn-sm btn-outline-secondary w-100" disabled>Próximamente</button>
-              </div>
-            </div>
-            {% endif %}
-
-            <!-- Módulo Inventario / Ficha de Productos (HU-01) -->
-            {% if permissions.inventory > 0 %}
-            <div class="col-md-4">
-              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
-                <h5 class="text-dark"><i class="bi bi-box-seam"></i> Inventario / Productos</h5>
-                <p class="text-muted small mb-3">
-                    {% if permissions.inventory == 1 %}Solo lectura{% else %}Lectura y escritura{% endif %}
-                </p>
-                <a href="{% url 'inventario:product_list' %}" class="btn btn-sm btn-primary w-100">Acceder</a>
-              </div>
-            </div>
-            {% endif %}
-
-            <!-- Módulo Proveedores -->
-            {% if permissions.suppliers > 0 %}
-            <div class="col-md-4">
-              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
-                <h5 class="text-dark"><i class="bi bi-truck"></i> Proveedores</h5>
-                <p class="text-muted small mb-3">
-                    {% if permissions.suppliers == 1 %}Solo lectura{% else %}Lectura y escritura{% endif %}
-                </p>
-                <button type="button" class="btn btn-sm btn-outline-secondary w-100" disabled>Próximamente</button>
-              </div>
-            </div>
-            {% endif %}
-
-            <!-- Módulo Compras -->
-            {% if permissions.purchases > 0 %}
-            <div class="col-md-4">
-              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
-                <h5 class="text-dark"><i class="bi bi-cart"></i> Compras</h5>
-                <p class="text-muted small mb-3">
-                    {% if permissions.purchases == 1 %}Solo lectura{% else %}Lectura y escritura{% endif %}
-                </p>
-                <button type="button" class="btn btn-sm btn-outline-secondary w-100" disabled>Próximamente</button>
-              </div>
-            </div>
-            {% endif %}
-
-            <!-- Módulo Ventas -->
-            {% if permissions.sales > 0 %}
-            <div class="col-md-4">
-              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
-                <h5 class="text-dark"><i class="bi bi-cash-coin"></i> Ventas</h5>
-                <p class="text-muted small mb-3">
-                    {% if permissions.sales == 1 %}Solo lectura{% else %}Lectura y escritura{% endif %}
-                </p>
-                <button type="button" class="btn btn-sm btn-outline-secondary w-100" disabled>Próximamente</button>
-              </div>
-            </div>
-            {% endif %}
-
-            <!-- Módulo Contabilidad -->
-            {% if permissions.accounting > 0 %}
-            <div class="col-md-4">
-              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
-                <h5 class="text-dark"><i class="bi bi-calculator"></i> Contabilidad</h5>
-                <p class="text-muted small mb-3">
-                    {% if permissions.accounting == 1 %}Solo lectura{% else %}Lectura y escritura{% endif %}
-                </p>
-                <button type="button" class="btn btn-sm btn-outline-secondary w-100" disabled>Próximamente</button>
-              </div>
-            </div>
-            {% endif %}
-
-            <!-- Módulo Reportes -->
-            {% if permissions.reporting > 0 %}
-            <div class="col-md-4">
-              <div class="p-3 border rounded bg-white bg-opacity-25 shadow-sm">
-                <h5 class="text-dark"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</h5>
-                <p class="text-muted small mb-3">
-                    {% if permissions.reporting == 1 %}Solo lectura{% else %}Lectura y escritura{% endif %}
-                </p>
-                <button type="button" class="btn btn-sm btn-outline-secondary w-100" disabled>Próximamente</button>
-              </div>
-            </div>
-            {% endif %}
-
-         </div>
-     </div> 
-</body>
-</html>
+<section class="panel-card" aria-labelledby="movements-heading">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <h2 class="h5 mb-0" id="movements-heading">Últimos movimientos</h2>
+    <a href="{% url 'inventario:movement_list' %}">Ver todos</a>
+  </div>
+  {% if recent_movements %}
+  <div class="table-responsive">
+    <table class="table table-sm mb-0">
+      <thead><tr><th scope="col">Producto</th><th scope="col">Bodega</th><th scope="col">Tipo</th><th scope="col">Cantidad</th><th scope="col">Fecha</th><th scope="col">Detalle</th></tr></thead>
+      <tbody>
+      {% for movement in recent_movements %}
+        <tr>
+          <td>{{ movement.producto.nombre }}</td>
+          <td>{{ movement.bodega.nombre }}</td>
+          <td>{{ movement.get_tipo_display }}</td>
+          <td>{{ movement.cantidad }}</td>
+          <td class="text-nowrap">{{ movement.fecha|date:"d/m/Y H:i" }}</td>
+          <td><a href="{% url 'inventario:movement_detail' movement.pk %}">Ver</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="mb-0">Aún no hay movimientos registrados.</p>
+  {% endif %}
+</section>
+{% else %}
+<div class="panel-card">
+  <p class="mb-0">Tu cuenta no tiene acceso a Inventario. Solicita al administrador que revise tus roles.</p>
+</div>
+{% endif %}
+{% endblock %}

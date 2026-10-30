@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import LoginForm
-from users.permissions import get_user_access
+from users.permissions import get_login_role_hints, get_user_access
 
 FUNCIONES = [
     'Ficha completa de productos (código, grupos, código de barras, ficha técnica, impuestos)',
@@ -42,7 +42,10 @@ def login_view(request):
         form = LoginForm()
         
    
-    return render(request, 'inicio/index.html', {'form': form})
+    return render(request, 'inicio/index.html', {
+        'form': form,
+        'role_hints': get_login_role_hints(),
+    })
         
 @login_required
 def logout_view(request):
@@ -67,6 +70,11 @@ def logout_view(request):
 #Se requiere login para entrar a dashboard
 @login_required
 def dashboard(request):
+    from django.shortcuts import render
+    from users.permissions import get_user_access
+    from django.db.models import F, Sum
+    from inventario.models import Product, Warehouse, Movement
+
     access = get_user_access(request.user)
     context = {
         'user': request.user,
@@ -74,5 +82,13 @@ def dashboard(request):
         'roles': access['roles'],
         'access': access,
     } 
-    return render (request, 'inicio/dashboard.html', context)
+    if access['view_products']:
+        context['summary'] = {
+            'products': Product.objects.count(),
+            'warehouses': Warehouse.objects.filter(activa=True).count(),
+            'units': Product.objects.aggregate(total=Sum('stock'))['total'] or 0,
+            'low_stock': Product.objects.filter(nivel_optimo__gt=0, stock__lt=F('nivel_optimo')).count(),
+        }
+        context['recent_movements'] = Movement.objects.select_related('producto', 'bodega', 'usuario')[:5]
+    return render(request, 'inicio/dashboard.html', context)
 
