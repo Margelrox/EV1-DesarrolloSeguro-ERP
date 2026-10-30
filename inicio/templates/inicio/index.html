@@ -28,7 +28,14 @@
       <div class="input-box">
         <label class="visually-hidden" for="{{ form.password.id_for_label }}">Contraseña</label>
         {{ form.password }}
-        <i class="bi bi-lock" aria-hidden="true"></i>
+        <button type="button" class="toggle-password"
+                data-target="{{ form.password.id_for_label }}"
+                aria-controls="{{ form.password.id_for_label }}"
+                aria-pressed="false"
+                aria-label="Mostrar contraseña"
+                title="Mostrar contraseña">
+          <i class="bi bi-eye-slash" aria-hidden="true"></i>
+        </button>
       </div>
 
     
@@ -44,6 +51,37 @@
        <button type="submit" class="btn">Ingresar</button>
        <p class="small text-center mt-3 mb-0">Si necesitas recuperar el acceso, contacta al administrador.</p>
      </form>
+
+     {% if role_hints %}
+       <section class="roles-hint" aria-labelledby="roles-hint-title">
+         <p class="roles-hint-title" id="roles-hint-title">Roles disponibles</p>
+         <ul class="roles-hint-list">
+           {% for hint in role_hints %}
+             <li class="roles-hint-item">
+               <span class="roles-hint-text">
+                 <span class="roles-hint-role">{{ hint.role }}</span>
+                 {% if hint.users %}<span class="roles-hint-user">{{ hint.users|join:', ' }}</span>{% endif %}
+                 <span class="roles-hint-access">{{ hint.access }}</span>
+               </span>
+               {% if hint.users %}
+                 <span class="roles-hint-copy">
+                   {% for username in hint.users %}
+                     <button type="button" class="copy-user"
+                             data-copy="{{ username }}"
+                             aria-label="Copiar el usuario {{ username }}"
+                             title="Copiar el usuario {{ username }}">
+                       <i class="bi bi-clipboard" aria-hidden="true"></i>
+                     </button>
+                   {% endfor %}
+                 </span>
+               {% endif %}
+             </li>
+           {% endfor %}
+         </ul>
+       </section>
+     {% endif %}
+
      </main>
+     <script src="{% static 'inicio/login.js' %}" defer></script>
 </body>
 </html>

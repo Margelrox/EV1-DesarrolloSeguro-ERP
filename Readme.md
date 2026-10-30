@@ -24,3 +24,8 @@ python manage.py test
 
 Los ajustes de presentación mantienen el diseño y la estructura de la base del equipo:
 fondo, panel translúcido, tarjetas y formularios Django. No requieren nuevas migraciones.
+
+## Productos, bodegas y movimientos
+
+La ampliación DSE-35 / DSE-36 / DSE-37 y sus migraciones, permisos y límites
+están documentados en [docs/INVENTARIO.md](docs/INVENTARIO.md).

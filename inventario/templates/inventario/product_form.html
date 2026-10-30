@@ -8,7 +8,7 @@
   {{ form.as_p }}
   <div class="d-flex flex-wrap gap-2 mt-4">
     <button type="submit" class="btn btn-primary">Guardar</button>
-    <a class="btn btn-secondary" href="{% url 'inventario:product_list' %}">Cancelar</a>
+    <a class="btn btn-secondary" href="{% url cancel_url %}">Cancelar</a>
   </div>
 </form>
 {% endblock %}

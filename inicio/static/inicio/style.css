@@ -68,6 +68,35 @@ body {
     color:#000000;
 
 }
+.input-box .toggle-password {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #000000;
+    cursor: pointer;
+}
+
+.input-box .toggle-password:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.input-box .toggle-password i {
+    position: static;
+    transform: none;
+    font-size: 20px;
+    pointer-events: none;
+}
+
 .wrapper .remember-forgot {
     display: flex;
     justify-content: space-between;
@@ -181,9 +210,99 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
     background: rgba(255,255,255, 0.65);
 }
 
+.roles-hint {
+    margin-top: 18px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    font-size: 12.5px;
+    line-height: 1.35;
+}
+
+.roles-hint-title {
+    margin: 0 0 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.roles-hint-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.roles-hint-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+    overflow-wrap: anywhere;
+}
+
+.roles-hint-item:last-child {
+    margin-bottom: 0;
+}
+
+.roles-hint-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.roles-hint-copy {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 4px;
+}
+
+.copy-user {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #000000;
+    cursor: pointer;
+}
+
+.copy-user:hover {
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.copy-user i {
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.roles-hint-role {
+    font-weight: 700;
+}
+
+.roles-hint-user {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.roles-hint-user::before,
+.roles-hint-access::before {
+    content: ' · ';
+}
+
+.roles-hint-access {
+    color: #343a40;
+}
+
 @media (max-width: 575px) {
     body { padding: 16px 12px; }
     .wrapper { padding: 24px 20px; }
     .wrapper .remember-forgot { flex-direction: column; gap: 8px; }
     .page-heading { font-size: 1.5rem; }
 }
+
+.audit-value { min-width: 180px; max-width: 340px; overflow-wrap: anywhere; white-space: normal; }

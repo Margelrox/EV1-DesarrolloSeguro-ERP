@@ -32,6 +32,8 @@ class Role (models.Model):
     reporting = models.IntegerField(choices= PERMISSION_CHOICES, default= 0)
     can_change_prices = models.BooleanField(default=False, verbose_name='Puede cambiar precios')
     can_manage_roles = models.BooleanField(default=False, verbose_name='Puede asignar roles')
+    can_manage_warehouses = models.BooleanField(default=False, verbose_name='Puede administrar bodegas')
+    can_register_movements = models.BooleanField(default=False, verbose_name='Puede registrar movimientos')
 
     class Meta:
         db_table = 'roles'

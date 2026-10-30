@@ -33,7 +33,8 @@ class CustomerAdmin(SuperuserOnlyMixin, UserAdmin):
 
 @admin.register(Role)
 class RoleAdmin(SuperuserOnlyMixin, admin.ModelAdmin):
-    list_display = ('role_name', 'inventory', 'can_change_prices', 'can_manage_roles')
+    list_display = ('role_name', 'inventory', 'can_change_prices', 'can_manage_roles',
+                    'can_manage_warehouses', 'can_register_movements')
     list_filter = ('inventory', 'can_change_prices', 'can_manage_roles')
     search_fields = ('role_name',)
 

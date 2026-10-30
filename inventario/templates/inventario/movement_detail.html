@@ -1,0 +1,15 @@
+{% extends 'inventario/base.html' %}
+{% block title %}Detalle de movimiento{% endblock %}
+{% block content %}
+<h1 class="page-heading">Movimiento #{{ movement.pk }}</h1>
+<dl class="row">
+<dt class="col-sm-4">Producto</dt><dd class="col-sm-8">{{ movement.producto }}</dd>
+<dt class="col-sm-4">Bodega</dt><dd class="col-sm-8">{{ movement.bodega }}{% if not movement.bodega.activa %} (inactiva){% endif %}</dd>
+<dt class="col-sm-4">Tipo / cantidad</dt><dd class="col-sm-8">{{ movement.get_tipo_display }} / {{ movement.cantidad }}</dd>
+<dt class="col-sm-4">Concepto</dt><dd class="col-sm-8">{{ movement.concepto }}</dd>
+<dt class="col-sm-4">Stock anterior / nuevo</dt><dd class="col-sm-8">{{ movement.stock_anterior }} / {{ movement.stock_nuevo }}</dd>
+<dt class="col-sm-4">Usuario / fecha</dt><dd class="col-sm-8">{{ movement.usuario.username }} / {{ movement.fecha|date:"d/m/Y H:i:s" }}</dd>
+</dl>
+<p>Registro de solo consulta. Los movimientos no se editan ni se eliminan.</p>
+<a href="{% url 'inventario:movement_list' %}">Volver a movimientos</a>
+{% endblock %}
