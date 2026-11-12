@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Arial", arial;   
+  font-family: Arial, sans-serif;
 }
 
 body {
@@ -10,6 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 24px 16px;
     background: url('index.jpg') no-repeat;
     background-size: cover;
     background-position: center;
@@ -23,10 +24,11 @@ body {
         color: #000000;
         border-radius: 16px;
         box-shadow: 0 8px 32px 0 rgba(0,0,0,0.2);
-        padding: 30px, 40px;
+        padding: 30px 40px;
+        max-width: 100%;
 }
 
-.wrapper h1 {
+.login-form h1 {
     font-size: 36px;
     text-align: center;
 
@@ -66,6 +68,35 @@ body {
     color:#000000;
 
 }
+.input-box .toggle-password {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #000000;
+    cursor: pointer;
+}
+
+.input-box .toggle-password:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.input-box .toggle-password i {
+    position: static;
+    transform: none;
+    font-size: 20px;
+    pointer-events: none;
+}
+
 .wrapper .remember-forgot {
     display: flex;
     justify-content: space-between;
@@ -88,10 +119,10 @@ body {
     text-decoration: underline;
 }
 
-.wrapper .btn {
+.login-form .btn {
     width: 100%;
     height: 45px;
-    background: rba(255,255,255, 0.25);
+    background: rgba(255,255,255, 0.65);
     border: none;
     outline: none; 
     border-radius: 40px;
@@ -102,3 +133,176 @@ body {
     font-weight: 600;
 
 }
+
+.login-form .btn:hover {
+    background: rgba(255,255,255, 0.9);
+}
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 3px solid #0d6efd;
+    outline-offset: 3px;
+}
+
+.input-box input:focus {
+    border-color: #0d6efd;
+}
+
+.wrapper-dashboard {
+    width: 950px;
+    padding: 35px;
+}
+
+.wrapper-inventory {
+    width: 1050px;
+    padding: 30px;
+}
+
+.page-heading {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    overflow-wrap: anywhere;
+}
+
+.product-form {
+    max-width: 620px;
+}
+
+.product-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.product-form input, .product-form textarea {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #6c757d;
+    border-radius: 6px;
+    background: rgba(255,255,255, 0.9);
+}
+
+.product-form textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.product-form .errorlist {
+    color: #842029;
+    padding-left: 20px;
+    margin-bottom: 6px;
+}
+
+.product-table td, .product-table th {
+    vertical-align: middle;
+    overflow-wrap: anywhere;
+}
+
+.product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+}
+
+.access-note, .form-note {
+    padding: 12px 16px;
+    border-radius: 6px;
+    background: rgba(255,255,255, 0.65);
+}
+
+.roles-hint {
+    margin-top: 18px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    font-size: 12.5px;
+    line-height: 1.35;
+}
+
+.roles-hint-title {
+    margin: 0 0 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.roles-hint-list {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+.roles-hint-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+    overflow-wrap: anywhere;
+}
+
+.roles-hint-item:last-child {
+    margin-bottom: 0;
+}
+
+.roles-hint-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.roles-hint-copy {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 4px;
+}
+
+.copy-user {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #000000;
+    cursor: pointer;
+}
+
+.copy-user:hover {
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.copy-user i {
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.roles-hint-role {
+    font-weight: 700;
+}
+
+.roles-hint-user {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.roles-hint-user::before,
+.roles-hint-access::before {
+    content: ' · ';
+}
+
+.roles-hint-access {
+    color: #343a40;
+}
+
+@media (max-width: 575px) {
+    body { padding: 16px 12px; }
+    .wrapper { padding: 24px 20px; }
+    .wrapper .remember-forgot { flex-direction: column; gap: 8px; }
+    .page-heading { font-size: 1.5rem; }
+}
+
+.audit-value { min-width: 180px; max-width: 340px; overflow-wrap: anywhere; white-space: normal; }

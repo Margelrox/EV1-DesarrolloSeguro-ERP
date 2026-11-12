@@ -1,26 +1,26 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from users.models import User
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
-        label = 'Username',
+        label = 'Usuario',
         widget= forms.TextInput(attrs=
                                 {
                                     'class': 'form-control',
                                     'placeholder' : 'Ingrese su usuario',
+                                    'autocomplete': 'username',
+                                    'autofocus': True,
                                 })
     )
 
     password = forms.CharField(
-        label = 'Password',
+        label = 'Contraseña',
         widget= forms.PasswordInput(attrs=
                                 {
                                     'class': 'form-control',
                                     'placeholder' : 'Ingrese su contraseña',
+                                    'autocomplete': 'current-password',
                                 })
     )
 
-    class meta :
-        model = User
-        fields = ['username', 'password']
+    # AuthenticationForm se encarga de validar las credenciales con Django.

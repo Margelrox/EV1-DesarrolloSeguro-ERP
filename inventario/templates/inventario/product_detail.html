@@ -1,0 +1,21 @@
+{% extends 'inventario/base.html' %}
+{% block title %}Ficha de producto{% endblock %}
+{% block content %}
+<h1 class="page-heading">{{ product.codigo }} · {{ product.nombre }}</h1>
+<dl class="row">
+  <dt class="col-sm-4">Descripción</dt><dd class="col-sm-8">{{ product.descripcion|default:"—" }}</dd>
+  <dt class="col-sm-4">Grupo / subgrupo</dt><dd class="col-sm-8">{{ product.grupo|default:"—" }} / {{ product.subgrupo|default:"—" }}</dd>
+  <dt class="col-sm-4">Código de barras</dt><dd class="col-sm-8">{{ product.codigo_barras|default:"—" }}</dd>
+  <dt class="col-sm-4">Fotografía</dt><dd class="col-sm-8">{% if product.fotografia %}<a href="{{ product.fotografia }}" target="_blank" rel="noopener noreferrer">Ver fotografía</a>{% else %}Sin fotografía{% endif %}</dd>
+  <dt class="col-sm-4">Ficha técnica</dt><dd class="col-sm-8">{{ product.ficha_tecnica|default:"—"|linebreaksbr }}</dd>
+  <dt class="col-sm-4">Precio / impuesto</dt><dd class="col-sm-8">{{ product.precio }} / {{ product.impuesto }} %</dd>
+  <dt class="col-sm-4">Stock total / nivel óptimo</dt><dd class="col-sm-8">{{ product.stock }} / {{ product.nivel_optimo }}</dd>
+</dl>
+<h2 class="h5">Existencias por bodega</h2>
+<ul>{% for balance in balances %}<li>{{ balance.bodega }}{% if not balance.bodega.activa %} (inactiva){% endif %}: {{ balance.cantidad }}</li>{% empty %}<li>Sin existencias por bodega.</li>{% endfor %}</ul>
+<div class="d-flex flex-wrap gap-3">
+{% if access.edit_products %}<a href="{% url 'inventario:product_edit' product.pk %}">Editar ficha</a>{% endif %}
+{% if access.change_prices %}<a href="{% url 'inventario:product_price' product.pk %}">Cambiar precio</a>{% endif %}
+<a href="{% url 'inventario:product_list' %}">Volver a productos</a>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'inventario/base.html' %}
+{% block title %}Bodegas{% endblock %}
+{% block content %}
+<h1 class="page-heading">Bodegas</h1>
+{% if access.manage_warehouses %}<a class="btn btn-primary mb-3" href="{% url 'inventario:warehouse_create' %}">Crear bodega</a>{% else %}<p>Se muestran las bodegas activas.</p>{% endif %}
+<div class="table-responsive"><table class="table table-light product-table">
+<thead><tr><th>Código</th><th>Nombre</th><th>Estado</th><th>Acciones</th></tr></thead>
+<tbody>{% for warehouse in warehouses %}<tr>
+<td>{{ warehouse.codigo }}</td><td>{{ warehouse.nombre }}</td><td>{{ warehouse.activa|yesno:"Activa,Inactiva" }}</td>
+<td>{% if access.manage_warehouses %}<a href="{% url 'inventario:warehouse_edit' warehouse.pk %}">Editar / desactivar</a>{% else %}Solo lectura{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="4">No hay bodegas disponibles.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

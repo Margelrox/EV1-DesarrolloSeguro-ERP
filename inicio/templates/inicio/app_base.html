@@ -1,0 +1,61 @@
+{% load static dashboard_navigation %}
+{% inventory_navigation request.user as navigation_access %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Panel principal{% endblock %} - ERP</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{% static 'inicio/style.css' %}">
+  <link rel="stylesheet" href="{% static 'inicio/app.css' %}">
+</head>
+<body class="app-body">
+  <div class="wrapper app-container">
+    <header class="app-navbar">
+      <a href="{% url 'inicio:dashboard' %}">ERP · Seguridad LTDA</a>
+      <div class="d-flex align-items-center flex-wrap gap-3">
+        <span>Usuario: <strong>{{ user.username }}</strong></span>
+        <a href="{% url 'inicio:logout' %}" class="btn btn-outline-danger btn-sm">Cerrar sesión</a>
+      </div>
+    </header>
+
+    <div class="app-layout">
+      <aside class="app-sidebar">
+        <h2 class="h6 mb-3">Menú principal</h2>
+        <nav class="nav nav-pills flex-column gap-2" aria-label="Navegación principal">
+          <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'inicio:dashboard' %}"><i class="bi bi-house" aria-hidden="true"></i> Inicio</a>
+          {% if navigation_access.view_products %}
+          <a class="nav-link {% if 'product' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'inventario:product_list' %}"><i class="bi bi-box-seam" aria-hidden="true"></i> Productos</a>
+          <a class="nav-link {% if 'warehouse' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'inventario:warehouse_list' %}"><i class="bi bi-building" aria-hidden="true"></i> Bodegas</a>
+          <a class="nav-link {% if 'movement' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'inventario:movement_list' %}"><i class="bi bi-arrow-left-right" aria-hidden="true"></i> Movimientos</a>
+          {% endif %}
+          {% if navigation_access.manage_warehouses %}
+          <a class="nav-link {% if request.resolver_match.url_name == 'audit_list' %}active{% endif %}" href="{% url 'inventario:audit_list' %}"><i class="bi bi-journal-text" aria-hidden="true"></i> Auditoría</a>
+          {% endif %}
+          {% if navigation_access.manage_roles and user.is_staff %}
+          <a class="nav-link" href="{% url 'admin:users_userrole_changelist' %}"><i class="bi bi-people" aria-hidden="true"></i> Asignar roles</a>
+          {% endif %}
+        </nav>
+        {% if navigation_access.modules.customers or navigation_access.modules.suppliers or navigation_access.modules.purchases or navigation_access.modules.sales or navigation_access.modules.accounting or navigation_access.modules.reporting %}
+        <p class="small mt-4 mb-2">Próximamente</p>
+        <ul class="small ps-3">
+          {% if navigation_access.modules.customers %}<li>Clientes</li>{% endif %}
+          {% if navigation_access.modules.suppliers %}<li>Proveedores</li>{% endif %}
+          {% if navigation_access.modules.purchases %}<li>Compras</li>{% endif %}
+          {% if navigation_access.modules.sales %}<li>Ventas</li>{% endif %}
+          {% if navigation_access.modules.accounting %}<li>Contabilidad</li>{% endif %}
+          {% if navigation_access.modules.reporting %}<li>Reportes</li>{% endif %}
+        </ul>
+        {% endif %}
+      </aside>
+
+      <main class="app-main" id="main-content">
+        {% include 'inicio/messages.html' %}
+        {% block app_content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+</body>
+</html>
