@@ -137,3 +137,5 @@ CSRF_COOKIE_HTTPONLY = True
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
+
+#Agregado para el commit
