@@ -17,7 +17,10 @@
       <a href="{% url 'inicio:dashboard' %}">ERP · Seguridad LTDA</a>
       <div class="d-flex align-items-center flex-wrap gap-3">
         <span>Usuario: <strong>{{ user.username }}</strong></span>
-        <a href="{% url 'inicio:logout' %}" class="btn btn-outline-danger btn-sm">Cerrar sesión</a>
+        <form method="POST" action="{% url 'inicio:logout' %}" class="d-inline m-0 p-0">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar sesión</button>
+        </form>
       </div>
     </header>
 

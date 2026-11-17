@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,13 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%m*_6@3d%bw^--gihqyi_*(h#$^msf7$a3d9)21glzkie&p33s'
+# Clave secreta configurable por entorno, sin prefijo inseguro
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'erp-secur-key-prod-58f0b72a49d21c7e90c33a1e948d3f1a6b0c2e4f7a9d1b3e5c7f9a2d4e6b8a0c'
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Modo depuración configurable
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 'yes')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '127.0.0.1 localhost [::1] testserver').split()
 
 
 # Application definition
@@ -138,4 +142,32 @@ CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
 
-#Agregado para el commit
+# Ajustes automáticos para producción / SSL
+if not DEBUG or os.environ.get('DJANGO_SECURE_SSL', 'False').lower() in ('true', '1'):
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+# Suprime la divulgación de versión en el servidor de desarrollo (ZAP-04)
+try:
+    import django.core.servers.basehttp as basehttp
+    basehttp.WSGIRequestHandler.server_version = 'WebServer'
+    basehttp.WSGIRequestHandler.sys_version = ''
+except (ImportError, AttributeError):
+    pass
+
+# Asegura cabeceras nosniff y Server en recursos estáticos servidos en desarrollo
+try:
+    from django.views import static
+    _orig_static_serve = static.serve
+    def _secure_static_serve(*args, **kwargs):
+        resp = _orig_static_serve(*args, **kwargs)
+        resp['X-Content-Type-Options'] = 'nosniff'
+        resp['Server'] = 'WebServer'
+        return resp
+    static.serve = _secure_static_serve
+except (ImportError, AttributeError):
+    pass

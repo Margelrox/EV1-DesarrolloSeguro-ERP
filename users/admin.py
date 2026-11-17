@@ -62,6 +62,13 @@ class UserRoleAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return self.has_module_permission(request)
 
+    def save_model(self, request, obj, form, change):
+        # Previene escalamiento vertical: un administrador no superusuario no puede autoasignarse roles
+        if not request.user.is_superuser and obj.user_id == request.user:
+            from django.core.exceptions import PermissionDenied
+            raise PermissionDenied('No puedes autoasignarte roles ni modificar tus propios roles.')
+        super().save_model(request, obj, form, change)
+
 
 # Los permisos nativos de Group no deben abrir una segunda vía de escalada.
 admin.site.unregister(Group)
