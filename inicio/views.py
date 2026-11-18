@@ -33,6 +33,11 @@ def login_view(request):
             user = authenticate(username=username, password=password)
             if user is not None: 
                 login(request, user)
+                try:
+                    from inventario.services import record_audit
+                    record_audit(request, 'login_exitoso', f'usuario:{user.username}')
+                except Exception:
+                    pass
                 request.session.set_expiry(None if request.POST.get('remember_me') == 'on' else 0)
                 return redirect('inicio:dashboard')
             else: 
@@ -49,6 +54,11 @@ def login_view(request):
         
 @login_required
 def logout_view(request):
+    try:
+        from inventario.services import record_audit
+        record_audit(request, 'logout', f'usuario:{request.user.username}')
+    except Exception:
+        pass
     logout(request)
     messages.success(request, 'Se ha cerrado sesión satisfactoriamente')
     return redirect('inicio:login')

@@ -37,9 +37,11 @@ class Command(BaseCommand):
             }
         )
         if creado:
-            usuario.set_password('1234')
+            import os
+            admin_pwd = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'AdminSeguro.2026!')
+            usuario.set_password(admin_pwd)
             usuario.save()
-            self.stdout.write('  [OK] Superusuario "admin" creado.')
+            self.stdout.write('  [OK] Superusuario "admin" creado con credencial segura.')
         else:
             self.stdout.write('  [OK] Superusuario "admin" encontrado.')
         return usuario
